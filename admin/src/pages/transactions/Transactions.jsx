@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import "./widgetLg.css";
+import React from "react";
+import { useState } from "react";
 import { userRequest } from "../../requestMethods";
-import ReactTimeAgo from 'react-time-ago';
-import { formatDistanceToNow } from 'date-fns';
+import { useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
 
-function WidgetLg() {
-
+const Transactions=()=>{
+    
     const [orders, setOrders] = useState([]);
-    const [user, setUser] = useState([]);
 
     useEffect(() => {
         const getOrders = async () => {
@@ -31,9 +30,9 @@ function WidgetLg() {
         return <button className={'widgetLgButton ' + type}>{type}</button>
     }
 
-    return (
-        <div className='widgetLg'>
-            <h3 className="widgetLgTitle">Latest Transcations</h3>
+    return(
+        <div className='widgetLg' style={{minWidth:1175}}>
+            <h3 className="widgetLgTitle">Transcations</h3>
             <table className='widgetLgTable'>
                 <tr className='widgetLgTr'>
                     <th className='widgetLgTh'>OrderId</th>
@@ -42,7 +41,7 @@ function WidgetLg() {
                     <th className='widgetLgTh'>Amount</th>
                     <th className='widgetLgTh'>Status</th>
                 </tr>
-                {orders.slice(0,5).map((order) => (
+                {orders.map((order) => (
                     <tr className='widgetLgTr' key={order._id}>
                         <td className='widgetLgorder'>
                             <span >{order._id}</span>
@@ -62,4 +61,4 @@ function WidgetLg() {
     )
 }
 
-export default WidgetLg;
+export default Transactions;

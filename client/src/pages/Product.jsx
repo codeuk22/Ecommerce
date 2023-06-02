@@ -6,11 +6,12 @@ import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import Newsletter from '../Newsletter'
 import { mobile } from '../responsive'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { publicRequest } from '../requestMethods'
 import {addProduct} from "../redux/cartRedux";
 import { useDispatch } from 'react-redux'
-
+import { addProductApi } from '../service/productApi'
+// import { Navigate } from 'react-router'
 
 const Container = styled.div`
 
@@ -122,12 +123,13 @@ const Product = () => {
     const [color,setColor]=useState("");
     const [size,setSize]=useState("");
     const dispatch=useDispatch();
-
+      const navigate= useNavigate()
 
     useEffect(()=>{
         const getProduct=async()=>{
             try{
                 const res=await publicRequest.get("/products/find/"+id);
+                console.log(res);
                 setProduct(res.data);
             }catch(e){
                 
@@ -146,9 +148,29 @@ const Product = () => {
     }
 
 
-    const handleClick=()=>{
-        //update cart
-        dispatch(addProduct({...product,quantity,color,size}));
+    const handleClick= async()=>{
+        // update cart
+        const data=localStorage.getItem("user");
+        console.log("data ,iss ", data)
+        if(!data){
+            navigate("/login")
+        }
+        else{
+
+            const data=await addProductApi({
+                userId:JSON.parse(localStorage.getItem("user"))._id,
+                productId:id,
+                size:size,
+                pricePerItem:product.price,
+                quantity:quantity
+            })
+            if(data){
+                window.location.reload();
+            }
+            alert("An item has been added to Cart");
+
+            // dispatch(addProduct({...product,quantity,color,size}));
+        }
     }
     return (
         <Container>
@@ -161,14 +183,15 @@ const Product = () => {
                 <InfoContainer>
                     <Title>{product.title}</Title>
                     <Desc>{product.desc}</Desc>
-                    <Price>{product.price}</Price>
+                    <Price>₹ {product.price}</Price>
                     <FilterContainer>
-                        <Filter>
+
+                        {/* <Filter>
                             <FilterTitle>Color</FilterTitle>
                             {product.color?.map((c)=>(
                                 <FilterColor color={c} key={c} onclick={()=>setColor(c)}/>
                             ))}    
-                        </Filter>
+                        </Filter> */}
                         <Filter>
                             <FilterTitle>Size</FilterTitle>
                             <FilterSize onChange={(e)=>setSize(e.target.value)}>
@@ -180,9 +203,9 @@ const Product = () => {
                     </FilterContainer>
                     <AddContainer>
                         <AmountContainer>
-                            <Remove onClick={()=> handleQuantity("dec")} />
+                            <Remove onClick={()=> handleQuantity("dec")} style={{cursor:"pointer"}} />
                             <Amount>{quantity}</Amount>
-                            <Add onClick={()=> handleQuantity("inc")} />
+                            <Add onClick={()=> handleQuantity("inc")} style={{cursor:"pointer"}}/>
                         </AmountContainer>
                         <Button onClick={handleClick}>Add To Cart</Button>
                     </AddContainer>

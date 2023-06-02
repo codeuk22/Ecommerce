@@ -6,16 +6,16 @@ height: 30px;
 background-color: teal;
 color: white;
 display: flex;
-justify-content: center;
 align-items: center;
-font-weight: 500;
+justify-content: center;
 font-size: 14px;
+font-weight: 500;
 `
 
 function Announcement() {
   return (
     <Container>
-        Super Deal! Free Shipping on Orders over $50
+        Super Deal! Free Shipping on Orders over ₹ 150
     </Container>
   )
 }

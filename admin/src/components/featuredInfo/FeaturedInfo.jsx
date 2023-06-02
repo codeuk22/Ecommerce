@@ -11,11 +11,12 @@ function FeaturedInfo() {
   useEffect(()=>{
     const getIncome=async ()=>{
       try{
-        const res=await userRequest.get("orders/income")
+        const res=await userRequest.get("/orders/income")
+        console.log("ti",res)
         setIncome(res.data);
         setPerc(res.data[1].total*100/res.data[0].total-100);
       }catch(e){
-
+        console.log(e);
       }
     }
     getIncome();

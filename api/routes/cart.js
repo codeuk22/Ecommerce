@@ -4,16 +4,35 @@ const router=require("express").Router();
 
 //Create
 
-router.post("/",verifyToken, async (req,res)=>{
-    const newCart=new Cart(req.body);
-
+router.post("/", async (req,res)=>{
+    
     try{
-        const savedProduct=await newProduct.save();
+        const exist=await  Cart.findOne({userId:req.body.userId,productId:req.body.productId})
+      console.log("exist is ", exist)
+
+        if(!exist){
+        const newCart=new Cart(req.body);
+        const savedProduct=await newCart.save();
+        console.log("new product ", newCart)
+        
         res.status(200).json(savedProduct);
+        }
+        else{
+            exist.quantity=exist.quantity+1;
+             const d=  await exist.save();
+             console.log("updated value",d)
+
+        }
     }catch(e){
-        res.status(500).json(e);
+        console.log("ppppp")
+        res.status(500).json({msg:e.message});
     }
 })
+
+
+
+// router.get("/")
+
 
 
 // Update
@@ -30,9 +49,10 @@ router.put("/:id",verifyTokenAndAuthorization,async (req,res)=>{
 })
 
 //Delete
-router.delete("/:id",verifyTokenAndAuthorization,async (req,res)=>{
+router.delete("/:id",async (req,res)=>{
     try{
-        await Cart.findByIdAndDelete(req.params.id);
+        await Cart.findOneAndDelete({productId:req.params.id});
+        // await Cart.deleteOne({id:req.params.id});
         res.status(200).json("Cart has been deleted");
     }catch(e){
         res.status(500).json(e);
@@ -40,11 +60,12 @@ router.delete("/:id",verifyTokenAndAuthorization,async (req,res)=>{
 })
 
 
+
  //Get User Cart
 
-router.get("/find/:userId",verifyTokenAndAuthorization, async (req,res)=>{
+router.get("/find/:id", async (req,res)=>{
     try{
-        const cart=await Cart.findOne(req.params.id);
+        const cart=await Cart.find({userId:req.params.id});
         res.status(200).json(cart);
     }catch(e){
         res.status(500).json(e);
@@ -53,7 +74,7 @@ router.get("/find/:userId",verifyTokenAndAuthorization, async (req,res)=>{
 
 //Get All
 
-router.get("/",verifyTokenAndAdmin,async (req,res)=>{
+router.get("/",async (req,res)=>{
     try{
         const carts=await Cart.find();
         res.status(200).json(carts);

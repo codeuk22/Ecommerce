@@ -51,7 +51,7 @@
     padding: 7px 10px;
     background: #eeeef7;
     color: #555;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .widgetSmIcon{

@@ -45,10 +45,13 @@ export const updateProduct=async (id,product,dispatch)=>{
 
 export const addProduct=async (product,dispatch)=>{
     dispatch(addProductStart());
+    // dispatch({type:addProductStart})
     try{
         const res=await userRequest.post("/products",product);
         dispatch(addProductSuccess(res.data));
+        // dispatch({type:addProductSuccess, payload:res.data})
     }catch(e){
         dispatch(addProductFailure());
+        // dispatch({type:addProductFailure});
     }
 }

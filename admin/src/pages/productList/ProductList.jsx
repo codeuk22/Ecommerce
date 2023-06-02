@@ -3,23 +3,38 @@ import React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "../../redux/apiCalls";
+import { productRows } from "../../dummyData";
+import { publicRequest } from "../../requestMethods";
 
 function ProductList() {
-  const dispatch=useDispatch();
-  const products=useSelector((state)=>state.product.products);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
 
-  useEffect(()=>{
+  useEffect(() => {
     getProducts(dispatch);
-  },[dispatch]);
+  }, [dispatch]);
 
-  const handleDelete = (id) => {
-    deleteProduct(id, dispatch)
+  const handleDelete = async (id) => {
+
+    // deleteProduct(id, dispatch)
+    try {
+      const res = await publicRequest.delete(`/products/${id}`);
+      if (res){
+        alert("Product has been deleted");
+        window.location.reload();
+      } 
+      
+    } catch (e) {
+      console.log(e);
+    }
+
   };
 
   const columns = [
+
     { field: "_id", headerName: "ID", width: 220 },
     {
       field: "product",
@@ -33,6 +48,11 @@ function ProductList() {
           </div>
         );
       },
+    },
+    {
+      field: "categories",
+      headerName: "Categories",
+      width: 160,
     },
     { field: "inStock", headerName: "Stock", width: 200 },
     {
@@ -66,8 +86,8 @@ function ProductList() {
         rows={products}
         disableSelectionOnClick
         columns={columns}
-        getRowId={row=>row._id}
-        pageSize={8}
+        getRowId={row => row._id}
+        pageSize={11}
         checkboxSelection
       />
     </div>
@@ -75,3 +95,4 @@ function ProductList() {
 }
 
 export default ProductList;
+

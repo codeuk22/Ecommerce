@@ -33,20 +33,22 @@ function Home() {
   useEffect(()=>{
     const getStats=async ()=>{
       try{
-        const res=await userRequest.get("/users/stats")
+        const res=await userRequest.get("/users/stats");
         res.data.map(item=>{
           setUserStats(prev=>[
-            ...prev,{name:MONTHS[item._id-1], "Acitve User":item.total},
+            ...prev,{name:MONTHS[item._id-1], "Active User":item.total},
           ])
         })
       }catch(e){
-
+        console.log(e);
       }
     }
     getStats();
   },[MONTHS])
 
+
   return (
+    <>
     <div className='home'>
       <FeaturedInfo />
       <Chart data={userStats} title="User Analytics" grid dataKey="Active User" />
@@ -55,6 +57,7 @@ function Home() {
         <WidgetLg />
       </div>
     </div>
+    </>
   )
 }
 

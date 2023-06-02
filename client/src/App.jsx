@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import { Navigate, Route, Routes } from "react-router-dom";
 import Success from "./pages/Success";
 import { useSelector } from 'react-redux';
+import Orders from './pages/Orders';
 
 
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products/:category" element={<ProductList />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/orders" element={<Orders/>}/>
         <Route path="/cart" element={<Cart />} />
         <Route path="/success" element={<Success />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />

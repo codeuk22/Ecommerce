@@ -1,6 +1,11 @@
 const mongoose=require("mongoose");
 
 const ProductSchema=new mongoose.Schema({
+    inStock:{
+        type:Boolean,
+        required:true,
+        default:true,
+    },
     title:{
         type:String,
         required:true,
@@ -12,16 +17,19 @@ const ProductSchema=new mongoose.Schema({
     },
     img:{
         type:String,
-        required:true,
+        // required:true,
     },
     categories:{
-        type:Array
+        type:String,
+        required:true,
     },
     size:{
-        type:String
+        type:Array,
+        default:[]
     },
     color:{
-        type:String
+        type:Array,
+        default:["black","yellow","pink"],
     },
     price:{
         type:Number,

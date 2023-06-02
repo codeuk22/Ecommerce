@@ -4,7 +4,8 @@ const router=require("express").Router();
 
 //Create
 
-router.post("/",verifyTokenAndAdmin, async (req,res)=>{
+router.post("/", async (req,res)=>{
+    console.log("new pro is ",req.body)
     const newProduct=new Product(req.body);
 
     try{
@@ -17,12 +18,13 @@ router.post("/",verifyTokenAndAdmin, async (req,res)=>{
 
 
 //Update
-router.put("/:id",verifyTokenAndAdmin,async (req,res)=>{
-    
+router.put("/:id",async (req,res)=>{
+    console.log("bcha")
     try{
-        const updatedProduct=await Product.findByIdAndUpdate(req.params.id,{
+        const updatedProduct=await Product.findByIdAndUpdate({_id:req.params.id},{
             $set:req.body
         },{new:true});
+        console.log("lol",updatedProduct)
         res.status(200).json(updatedProduct);
     }catch(e){
         res.status(500).json(e);
@@ -30,10 +32,10 @@ router.put("/:id",verifyTokenAndAdmin,async (req,res)=>{
 })
 
 // //Delete
-router.delete("/:id",verifyTokenAndAdmin,async (req,res)=>{
+router.delete("/:id",async (req,res)=>{
     try{
-        await Product.findByIdAndDelete(req.params.id);
-        res.status(200).json("Product has been deleted");
+        const deleted=await Product.findByIdAndDelete({_id:req.params.id});
+        res.status(200).json(deleted);
     }catch(e){
         res.status(500).json(e);
     }
@@ -44,7 +46,7 @@ router.delete("/:id",verifyTokenAndAdmin,async (req,res)=>{
 
 router.get("/find/:id",async (req,res)=>{
     try{
-        const product=await Product.findById(req.params.id);
+        const product=await Product.findOne({_id:req.params.id});
         res.status(200).json(product);
     }catch(e){
         res.status(500).json(e);
@@ -69,7 +71,7 @@ router.get("/",async (req,res)=>{
         });
        }else{
         products=await Product.find();
-        console.log(products)
+        // console.log(products)
        }
 
        res.status(200).json(products);

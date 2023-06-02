@@ -12,7 +12,7 @@ const OrderSchema=new mongoose.Schema({
             },
             quantity:{
                 type:Number,
-                default:1
+                // default:1
             }
         }
     ],
@@ -22,7 +22,7 @@ const OrderSchema=new mongoose.Schema({
     },
     address:{
         type:Object,
-        required:true
+        // required:true
     },
     status:{
         type:String,
